@@ -14,8 +14,10 @@ let timer = duration;
 let interval = null;
 let isRunning = false;
 let audio = $('audio')[0]; // Get the audio element
+audio.load(); // Load the audio file
 let shortBreakCount = 0; // Counter for short breaks
 let startTime = null;
+
 
 function updateDisplay() {
     const minutes = Math.floor(timer / 60);
@@ -74,6 +76,10 @@ function updateTimmer() {
 }
 
 function startTimer() {
+    audio.play();
+    audio.pause();
+    audio.currentTime = 0; // Reset audio to the beginning
+
     if (currentSession == 1) {
         const audio = $('audio')[0];
         audio.play(); // Play audio for short break
