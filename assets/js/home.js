@@ -1,14 +1,10 @@
 
 // let duration = 15; // 25 minutes in second
-let durations = [25 * 60, 5 * 60, 15 * 60]; // 25 minutes, 5 minutes, 15 minutes in seconds
+let durations = [15, 5, 10]; // 25 minutes, 5 minutes, 15 minutes in seconds
 let currentSession = 0; // 0 for work, 1 for short break, 2 for long break
-if (currentSession == 0) {
-    duration = durations[0]; // 25 minutes for work
-} else if (currentSession == 1) {
-    duration = durations[1]; // 5 minutes for short break
-} else {
-    duration = durations[2]; // 15 minutes for long break
-}
+let duration = 0; // Initialize duration variable
+
+duration = durations[currentSession]; // Set initial duration based on current session
 
 let timer = duration;
 let interval = null;
@@ -65,13 +61,8 @@ function changeMode() {
 }
 
 function updateTimmer() {
-    if (currentSession == 0) {
-        duration = 25 * 60; // 25 minutes for work
-    } else if (currentSession == 1) {
-        duration = 5 * 60; // 5 minutes for short break
-    } else {
-        duration = 15 * 60; // 15 minutes for long break
-    }
+    duration = durations[currentSession]; // Update duration based on current session
+   
     timer = duration;
 }
 
@@ -89,27 +80,38 @@ function startTimer() {
         isRunning = true;
         startTime = Date.now(); // Record the start time
         interval = setInterval(() => {
+            console.log(`Current session: ${currentSession}`);
             let now = Date.now();
-            elapsedTime = Math.floor((now - startTime) / 1000); // Calculate elapsed time in seconds
+            let elapsedTime = Math.floor((now - startTime) / 1000); // Calculate elapsed time in seconds
             console.log(`Elapsed time: ${elapsedTime} seconds`);
+            console.log(`duration: ${duration} seconds`);
             timer = duration - elapsedTime; // Decrease timer by elapsed time
-            if (timer > 0) {
+            if (timer >= 0) {
                 updateDisplay();
             } else {
-                currentSession = (currentSession + 1) % 3; // Cycle through sessions
-                if (currentSession == 1) {
+                clearInterval(interval); // Clear the interval when timer reaches 0
+                if (currentSession == 0) {
                     shortBreakCount++; // Increment short break count
-                    if (shortBreakCount >= 4) {
+                    if(shortBreakCount == 4){
                         currentSession = 2; // Switch to long break after 4 short breaks
                         shortBreakCount = 0; // Reset short break count
                     }
+                    else {
+                        currentSession = 1; // Switch to short break after work session
+                        audio.play(); // Play audio for short break
+                    }
                 }
-                if (currentSession == 2 && shortBreakCount < 4) { // switch to long break only if short breaks are equal to 4
-                    currentSession = 0;
+                else{
+                    currentSession = 0; // Switch back to work session after break
                 }
+                
+
                 updateTimmer(); // Update duration based on current session
                 updateDisplay();
                 updateMode(); // Change mode display
+
+                isRunning = false; // Reset isRunning flag
+                startTimer(); // Restart the timer for the next session                
             }
         }, 1000);
     }
