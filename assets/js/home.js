@@ -1,6 +1,6 @@
 
 // let duration = 15; // 25 minutes in second
-let durations = [7*60, 15, 10]; // 25 minutes, 5 minutes, 15 minutes in seconds
+let durations = [25*60, 5*60, 15*60]; // 25 minutes, 5 minutes, 15 minutes in seconds
 let currentSession = 0; // 0 for work, 1 for short break, 2 for long break
 let duration = 0; // Initialize duration variable
 
