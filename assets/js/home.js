@@ -1,4 +1,6 @@
 
+import { audioList } from "./audio.js";
+
 // let duration = 15; // 25 minutes in second
 let durations = [25*60, 5*60, 15*60]; // 25 minutes, 5 minutes, 15 minutes in seconds
 let currentSession = 0; // 0 for work, 1 for short break, 2 for long break
@@ -10,6 +12,9 @@ let timer = duration;
 let interval = null;
 let isRunning = false;
 let audio = $('audio')[0]; // Get the audio element
+let audioSrc = $(`audio source`);
+audioSrc.attr('src', `assets/audio/${audioList[0]}.mp3`); // Set the audio source based on current session
+
 audio.load(); // Load the audio file
 let shortBreakCount = 0; // Counter for short breaks
 let startTime = null;
@@ -116,6 +121,7 @@ function startTimer() {
         }, 1000);
     }
 }
+$(`.start`).on('click', startTimer);
 
 function pauseTimer() {
     clearInterval(interval);
@@ -123,6 +129,7 @@ function pauseTimer() {
     isRunning = false;
     duration = timer; // Save the current timer value
 }
+$(`.pause`).on('click', pauseTimer);
 
 function resetTimer() {
     clearInterval(interval);
@@ -132,6 +139,7 @@ function resetTimer() {
     timer = duration; // Reset timer to the initial duration
     updateDisplay();
 }
+$(`.reset`).on('click', resetTimer);
 
 // Initialize display
 updateDisplay();
