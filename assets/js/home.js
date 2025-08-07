@@ -147,3 +147,13 @@ updateDisplay();
 // update mode base on click
 
 $('.mode').on('click', changeMode);
+
+let audioListSelect = $('#audioList');
+audioList.forEach(audioName => {
+    audioListSelect.append(`<option value="${audioName}">${audioName}</option>`);
+});
+audioListSelect.on('change', function() {
+    let selectedAudio = $(this).val();
+    audioSrc.attr('src', `assets/audio/${selectedAudio}.mp3`); // Update audio source
+    audio.load(); // Load the new audio file
+});
